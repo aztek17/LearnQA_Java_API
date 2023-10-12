@@ -29,4 +29,30 @@ public class TrainingTest {
         String locationHeader = response.getHeader("Location");
         System.out.println("Редирект ведет на андрес: " + locationHeader);
     }
+
+    @Test
+    public void testLongRedirect() {
+        String url = "https://playground.learnqa.ru/api/long_redirect";
+        int countRedirect = 0;
+        int statusCode = 0;
+
+        while (statusCode != 200) {
+            Response response = RestAssured
+                    .given()
+                    .redirects()
+                    .follow(false)
+                    .when()
+                    .get(url)
+                    .andReturn();
+
+            statusCode = response.getStatusCode();
+            System.out.println("Status Code: " + statusCode);
+            if (statusCode != 200) {
+                url = response.getHeader("Location");
+                System.out.println("Редирект на адрес: " + url);
+                System.out.println("Количество редиректов: " + ++countRedirect);
+                System.out.println("__________________");
+            }
+        }
+    }
 }
