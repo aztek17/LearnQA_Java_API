@@ -4,12 +4,24 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class DataGenerator {
 
     public static String getRandomEmail() {
         String timestamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
         return "learnqa" + timestamp + "@example.com";
+    }
+
+    public static String getRandomString(int length) {
+        String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        Random random = new Random();
+        StringBuilder finalString = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            int number = random.nextInt(str.length());
+            finalString.append(str.charAt(number));
+        }
+        return finalString.toString();
     }
 
     public static Map<String, String> getRegistrationData() {
