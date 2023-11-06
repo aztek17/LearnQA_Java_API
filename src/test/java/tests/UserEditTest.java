@@ -98,4 +98,37 @@ public class UserEditTest extends BaseTestCase {
         Assertions.assertResponseCodeEquals(responseEditUser, 400);
         Assertions.assertResponseTextEquals(responseEditUser, "Auth token not supplied");
     }
+
+    @Test
+    @Description("This test checks changed users firstname with authorize strangers user")
+    @DisplayName("Change not your user")
+    public void testEditNotYourUsers() {
+        Map<String, String> authData = new HashMap<>();
+        authData.put("email", "vinkotov@example.com");
+        authData.put("password", "1234");
+
+        Response responseGetAuth = apiCoreRequests
+                .makePostRequest("https://playground.learnqa.ru/api/user/login", authData);
+
+        String authCookie = this.getCookie(responseGetAuth, "auth_sid");
+        String authToken = this.getHeader(responseGetAuth, "x-csrf-token");
+        Assertions.jsonValueByNameNotEquals(responseGetAuth, "user_id", this.userId);
+
+        //EDIT
+        String newName = "Changed New Name";
+        Map<String, String> editData = new HashMap<>();
+        editData.put("firstName", newName);
+
+        Response responseEditUser = apiCoreRequests
+                .makePutRequest(
+                        "https://playground.learnqa.ru/api/user/" + this.userId,
+                        authCookie,
+                        authToken,
+                        editData
+                );
+
+        Assertions.assertResponseCodeEquals(responseEditUser, 400);
+        Assertions.assertResponseTextEquals(responseEditUser, "Auth token not supplied");
+
+    }
 }
