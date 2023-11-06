@@ -198,6 +198,6 @@ public class UserEditTest extends BaseTestCase {
                 );
 
         Assertions.assertResponseCodeEquals(responseEditUser, 400);
-        Assertions.assertJsonByName(responseEditUser, "error","Too short value for field firstName");
+        Assertions.assertJsonByName(responseEditUser, "error", "Too short value for field firstName");
     }
 }
