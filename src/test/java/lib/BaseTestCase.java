@@ -11,7 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class BaseTestCase {
     protected String getHeader(Response response, String name) {
         Headers headers = response.getHeaders();
-
         assertTrue(headers.hasHeaderWithName(name), "Response doesn't have header with name " + name);
         return headers.getValue(name);
     }

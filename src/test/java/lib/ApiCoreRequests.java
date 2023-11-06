@@ -55,4 +55,24 @@ public class ApiCoreRequests {
                 .post(url)
                 .andReturn();
     }
+
+    @Step("Make a PUT-request with authorize")
+    public Response makePutRequest(String url, String token, String cookie, Map<String, String> editData) {
+        return given()
+                .filter(new AllureRestAssured())
+                .header("x-csrf-token", token)
+                .cookie("auth_sid", cookie)
+                .body(editData)
+                .put(url)
+                .andReturn();
+    }
+
+    @Step("Make a PUT-request w/o authorize")
+    public Response makePutRequestWithoutAuthorize(String url, Map<String, String> editData) {
+        return given()
+                .filter(new AllureRestAssured())
+                .body(editData)
+                .put(url)
+                .andReturn();
+    }
 }
