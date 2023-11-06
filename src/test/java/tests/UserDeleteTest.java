@@ -88,8 +88,43 @@ public class UserDeleteTest extends BaseTestCase {
                         header,
                         cookie
                 );
-        
+
         Assertions.assertResponseCodeEquals(responseUserData, 404);
         Assertions.assertResponseTextEquals(responseUserData, "User not found");
+    }
+
+    @Test
+    @Description("This test delete user by authorized another user")
+    @DisplayName("Delete user by authorized another user")
+    public void testDeleteAsAnotherUser() {
+        // CREATE USER
+        Map<String, String> userData = DataGenerator.getRegistrationData();
+        Response responseCreateAuth = apiCoreRequests
+                .makePostRequest(
+                        "https://playground.learnqa.ru/api/user/",
+                        userData
+                );
+        int newUserId = this.getIntFromJson(responseCreateAuth, "id");
+
+        // AUTHORIZATION ANOTHER USER
+        Map<String, String> authData = new HashMap<>();
+        authData.put("email", "vinkotov@example.com");
+        authData.put("password", "1234");
+
+        Response responseGetAuth = apiCoreRequests
+                .makePostRequest("https://playground.learnqa.ru/api/user/login", authData);
+
+        String authHeader = this.getHeader(responseGetAuth, "x-csrf-token");
+        String authCookie = this.getCookie(responseGetAuth, "auth_sid");
+
+        // DELETE CREATED USER
+        Response responseDeleteUser = apiCoreRequests
+                .makeDeleteRequest(
+                        "https://playground.learnqa.ru/api/user/" + newUserId,
+                        authHeader,
+                        authCookie
+                );
+
+        Assertions.assertResponseCodeEquals(responseDeleteUser, 400);
     }
 }
