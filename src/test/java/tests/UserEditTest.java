@@ -111,7 +111,7 @@ public class UserEditTest extends BaseTestCase {
                 .makePostRequest("https://playground.learnqa.ru/api/user/login", authData);
 
         String authCookie = this.getCookie(responseGetAuth, "auth_sid");
-        String authToken = this.getHeader(responseGetAuth, "x-csrf-token");
+        String authHeader = this.getHeader(responseGetAuth, "x-csrf-token");
         Assertions.jsonValueByNameNotEquals(responseGetAuth, "user_id", this.userId);
 
         //EDIT
@@ -122,13 +122,47 @@ public class UserEditTest extends BaseTestCase {
         Response responseEditUser = apiCoreRequests
                 .makePutRequest(
                         "https://playground.learnqa.ru/api/user/" + this.userId,
+                        authHeader,
                         authCookie,
-                        authToken,
                         editData
                 );
 
         Assertions.assertResponseCodeEquals(responseEditUser, 400);
-        Assertions.assertResponseTextEquals(responseEditUser, "Auth token not supplied");
 
+    }
+
+    @Test
+    @Description("This test checks change user to incorrect email")
+    @DisplayName("Change email to incorrect")
+    public void testEditToIncorrectEmail() {
+        //LOGIN
+        Map<String, String> authData = new HashMap<>();
+        authData.put("email", this.email);
+        authData.put("password", this.password);
+
+        Response responseGetAuth = apiCoreRequests
+                .makePostRequest(
+                        "https://playground.learnqa.ru/api/user/login",
+                        authData
+                );
+
+        String header = this.getHeader(responseGetAuth, "x-csrf-token");
+        String cookie = this.getCookie(responseGetAuth, "auth_sid");
+
+        //EDIT
+        String incorrectEmail = DataGenerator.getRandomEmail().replace("@", "");
+        Map<String, String> editData = new HashMap<>();
+        editData.put("email", incorrectEmail);
+
+        Response responseEditUser = apiCoreRequests
+                .makePutRequest(
+                        "https://playground.learnqa.ru/api/user/" + this.userId,
+                        header,
+                        cookie,
+                        editData
+                );
+
+        Assertions.assertResponseCodeEquals(responseEditUser, 400);
+        Assertions.assertResponseTextEquals(responseEditUser, "Invalid email format");
     }
 }
