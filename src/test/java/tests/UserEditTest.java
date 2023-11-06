@@ -165,4 +165,39 @@ public class UserEditTest extends BaseTestCase {
         Assertions.assertResponseCodeEquals(responseEditUser, 400);
         Assertions.assertResponseTextEquals(responseEditUser, "Invalid email format");
     }
+
+    @Test
+    @Description("This test checks change firstName to less than required character in field")
+    @DisplayName("Change firstName value to too small")
+    public void testChangeNameToSmallName() {
+        //LOGIN
+        Map<String, String> authData = new HashMap<>();
+        authData.put("email", this.email);
+        authData.put("password", this.password);
+
+        Response responseGetAuth = apiCoreRequests
+                .makePostRequest(
+                        "https://playground.learnqa.ru/api/user/login",
+                        authData
+                );
+
+        String header = this.getHeader(responseGetAuth, "x-csrf-token");
+        String cookie = this.getCookie(responseGetAuth, "auth_sid");
+
+        //EDIT
+        String smallFirstName = DataGenerator.getRandomString(1);
+        Map<String, String> editData = new HashMap<>();
+        editData.put("firstName", smallFirstName);
+
+        Response responseEditUser = apiCoreRequests
+                .makePutRequest(
+                        "https://playground.learnqa.ru/api/user/" + this.userId,
+                        header,
+                        cookie,
+                        editData
+                );
+
+        Assertions.assertResponseCodeEquals(responseEditUser, 400);
+        Assertions.assertJsonByName(responseEditUser, "error","Too short value for field firstName");
+    }
 }
