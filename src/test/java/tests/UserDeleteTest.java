@@ -1,14 +1,13 @@
 package tests;
 
-import io.qameta.allure.Description;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.Assertions;
 import lib.BaseTestCase;
 import lib.DataGenerator;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -21,8 +20,11 @@ public class UserDeleteTest extends BaseTestCase {
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
 
     @Test
+    @Severity(SeverityLevel.NORMAL)
     @Description("This test checks delete reserved users")
     @DisplayName("Delete reserved user")
+    @Tag("negative")
+    @TmsLink("MV-102")
     public void testDeleteReservedUser() {
         // AUTHORIZATION RESERVED USER
         Map<String, String> authData = new HashMap<>();
@@ -49,8 +51,11 @@ public class UserDeleteTest extends BaseTestCase {
     }
 
     @Test
+    @Severity(SeverityLevel.NORMAL)
     @Description("This test successfully delete user")
     @DisplayName("Positive delete user")
+    @Tag("positive")
+    @TmsLink("MV-103")
     public void testDeleteUser() {
         // CREATE USER
         Map<String, String> userData = DataGenerator.getRegistrationData();
@@ -101,7 +106,10 @@ public class UserDeleteTest extends BaseTestCase {
 
     @Test
     @Description("This test delete user by authorized another user")
+    @Severity(SeverityLevel.CRITICAL)
     @DisplayName("Delete user by authorized another user")
+    @Tag("negative")
+    @TmsLink("MV-104")
     public void testDeleteAsAnotherUser() {
         // CREATE USER
         Map<String, String> userData = DataGenerator.getRegistrationData();

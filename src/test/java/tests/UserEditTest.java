@@ -1,8 +1,6 @@
 package tests;
 
-import io.qameta.allure.Description;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.Assertions;
@@ -10,6 +8,7 @@ import lib.BaseTestCase;
 import lib.DataGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -39,8 +38,11 @@ public class UserEditTest extends BaseTestCase {
     }
 
     @Test
+    @Severity(SeverityLevel.CRITICAL)
     @Description("This test checks changed users firstname by authorized yourself")
     @DisplayName("Change user by authorized yourself")
+    @Tag("positive")
+    @TmsLink("MV-105")
     public void testEditJustCreatedTest() {
         //LOGIN
         Map<String, String> authData = new HashMap<>();
@@ -83,7 +85,10 @@ public class UserEditTest extends BaseTestCase {
 
     @Test
     @Description("This test checks changed users firstname without previously authorize")
+    @Severity(SeverityLevel.NORMAL)
     @DisplayName("Change user without authorize")
+    @Tag("negative")
+    @TmsLink("MV-106")
     public void testEditUserWithoutAuthorize() {
         String newName = "Changed Name";
         Map<String, String> editData = new HashMap<>();
@@ -101,7 +106,10 @@ public class UserEditTest extends BaseTestCase {
 
     @Test
     @Description("This test checks changed users firstname with authorize strangers user")
+    @Severity(SeverityLevel.NORMAL)
     @DisplayName("Change not your user")
+    @Tag("negative")
+    @TmsLink("MV-107")
     public void testEditNotYourUsers() {
         Map<String, String> authData = new HashMap<>();
         authData.put("email", "vinkotov@example.com");
@@ -133,7 +141,10 @@ public class UserEditTest extends BaseTestCase {
 
     @Test
     @Description("This test checks change user to incorrect email")
+    @Severity(SeverityLevel.MINOR)
     @DisplayName("Change email to incorrect")
+    @Tag("negative")
+    @TmsLink("MV-108")
     public void testEditToIncorrectEmail() {
         //LOGIN
         Map<String, String> authData = new HashMap<>();
@@ -168,7 +179,10 @@ public class UserEditTest extends BaseTestCase {
 
     @Test
     @Description("This test checks change firstName to less than required character in field")
+    @Severity(SeverityLevel.TRIVIAL)
     @DisplayName("Change firstName value to too small")
+    @Tag("negative")
+    @TmsLink("MV-109")
     public void testChangeNameToSmallName() {
         //LOGIN
         Map<String, String> authData = new HashMap<>();

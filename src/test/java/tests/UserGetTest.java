@@ -1,14 +1,13 @@
 package tests;
 
-import io.qameta.allure.Description;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
+import io.qameta.allure.*;
 import io.restassured.response.Response;
 import lib.ApiCoreRequests;
 import lib.Assertions;
 import lib.BaseTestCase;
 import lib.DataGenerator;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -21,8 +20,10 @@ public class UserGetTest extends BaseTestCase {
     private final ApiCoreRequests apiCoreRequests = new ApiCoreRequests();
 
     @Test
+    @Severity(SeverityLevel.BLOCKER)
     @Description("This test checks receiving users by unauthorized user")
     @DisplayName("Get user by unauthorized user")
+    @TmsLink("MV-110")
     public void testGetUserDataNotAuth() {
         Response responseUserData = apiCoreRequests
                 .makeGetRequestWithoutParams("https://playground.learnqa.ru/api/user/2");
@@ -35,7 +36,10 @@ public class UserGetTest extends BaseTestCase {
 
     @Test
     @Description("This test checks receiving users by yourself authorized user")
+    @Severity(SeverityLevel.NORMAL)
     @DisplayName("Get user by authorized user")
+    @Tag("positive")
+    @TmsLink("MV-111")
     public void testGetUserDetailsAuthAsSameUser() {
         Map<String, String> authData = new HashMap<>();
         authData.put("email", "vinkotov@example.com");
@@ -63,7 +67,10 @@ public class UserGetTest extends BaseTestCase {
 
     @Test
     @Description("This test checks receiving users by another authorized user")
+    @Severity(SeverityLevel.NORMAL)
     @DisplayName("Get user by authorized another user")
+    @Tag("negative")
+    @TmsLink("MV-112")
     public void testGetUserDetailsAuthAsAnotherUser() {
         Map<String, String> userRegistrationData = DataGenerator.getRegistrationData();
 
